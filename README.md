@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/ancap-kun/gst.svg)](https://jitpack.io/#ancap-kun/gst)
+
 Universal yet blazing-fast way to handle placeholders in strings in Java.
 
 ### It can be simple...
@@ -53,4 +55,16 @@ GSTBenchmark.simple_small                               avgt   25    5063,460 ? 
 ```
 
 ### Maven
+```xml
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
 
+        <dependency>
+            <groupId>com.github.ancap-kun.gst</groupId>
+            <artifactId>gst-core</artifactId>
+            <version>look above</version>
+            <scope>compile</scope>
+        </dependency>
+```
