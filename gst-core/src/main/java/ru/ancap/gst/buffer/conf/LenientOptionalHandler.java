@@ -6,7 +6,7 @@ public class LenientOptionalHandler<T> implements OptionalHandler<T> {
     public boolean checkForProblem() {
         return false;
     }
-
+    
     @Override
     public T handler() {
         throw new IllegalStateException(

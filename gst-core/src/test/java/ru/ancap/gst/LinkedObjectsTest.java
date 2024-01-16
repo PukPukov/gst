@@ -54,7 +54,7 @@ public class LinkedObjectsTest {
         expected.add(1);
         expected.add(3);
         expected.add(5);
-
+        
         var zero = objects.graphStart();
         var two = objects.graphStart().next().next();
         var four = two.next().next();

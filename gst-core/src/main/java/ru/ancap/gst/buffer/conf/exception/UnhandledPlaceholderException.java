@@ -10,12 +10,12 @@ import ru.ancap.gst.parser.gst_structure.Placeholder;
 @Accessors(fluent = true) @Getter
 @ToString
 public class UnhandledPlaceholderException extends RuntimeException {
-
+    
     private final Placeholder unhandledPlaceholder;
     
     @Override
     public String getMessage() {
         return this.toString();
     }
-
+    
 }

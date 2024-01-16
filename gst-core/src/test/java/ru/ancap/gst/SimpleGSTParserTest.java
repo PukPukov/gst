@@ -31,16 +31,16 @@ public class SimpleGSTParserTest {
         
         assertEquals(expected, parser.parse("foo\\{bar}baz"));
     }
-
+    
     @Test
     public void nonLatin() {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "эава"));
         expected.add(new Placeholder(new DirectPlaceholderData("ххц\uD83D\uDC72\uD83C\uDFFF\uD83D\uDC73\uD83C\uDFFF222", Optional.empty(), new Text(4, "\\{ххц\uD83D\uDC72\uD83C\uDFFF\uD83D\uDC73\uD83C\uDFFF222}")), false, true));
         expected.add(new Text(21, "ззз\uD83D\uDC72\uD83C\uDFFF\uD83D\uDC73\uD83C\uDFFFзу"));
-
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-
+        
         assertEquals(expected, parser.parse("эава\\{ххц\uD83D\uDC72\uD83C\uDFFF\uD83D\uDC73\uD83C\uDFFF222}ззз\uD83D\uDC72\uD83C\uDFFF\uD83D\uDC73\uD83C\uDFFFзу"));
     }
     
@@ -50,9 +50,9 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.empty(), new Text(3, "\\{!bar}")), true, true));
         expected.add(new Text(10, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{!bar}baz"));
     }
     
@@ -62,9 +62,9 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("fizz"), new Text(3, "\\{bar:fizz}")), false, true));
         expected.add(new Text(14, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{bar:fizz}baz"));
     }
     
@@ -74,16 +74,16 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("!-4559{}6!89}56"), new Text(3, "\\{bar:!-4559{\\}6!89\\}56}")), false, true));
         expected.add(new Text(27, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{bar:!-4559{\\}6!89\\}56}baz"));
     }
     
     @Test
     public void illegalName() {
         GSTParser parser = SimpleGSTParser.inst();
-    
+        
         String template = "Text \\{{var}}";
         assertThrows(UnexpectedSpecialCharacterException.class, () -> parser.parse(template));
     }
@@ -100,7 +100,7 @@ public class SimpleGSTParserTest {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.empty(), new Text(3, "\\{bar")), false, false));
-    
+        
         assertEquals(expected, SimpleGSTParser.inst().parse("foo\\{bar"));
     }
     
@@ -109,7 +109,7 @@ public class SimpleGSTParserTest {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("arg"), new Text(3, "\\{bar:arg")), false, false));
-    
+        
         assertEquals(expected, SimpleGSTParser.inst().parse("foo\\{bar:arg"));
     }
     
@@ -118,7 +118,7 @@ public class SimpleGSTParserTest {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.empty(), new Text(3, "\\{bar}")), false, true));
-    
+        
         assertEquals(expected, SimpleGSTParser.inst().parse("foo\\{bar}"));
     }
     
@@ -126,14 +126,14 @@ public class SimpleGSTParserTest {
     public void onlyText() {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo"));
-    
+        
         assertEquals(expected, SimpleGSTParser.inst().parse("foo"));
     }
     
     @Test
     public void empty() {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
-    
+        
         assertEquals(expected, SimpleGSTParser.inst().parse(""));
     }
     
@@ -143,7 +143,7 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("fizz]"), new Text(3, "[bar_fizz+]]")), false, true));
         expected.add(new Text(15, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.builder()
             .specialCharacterSet(SpecialCharacterSet.builder()
                 .closure('[', ']')
@@ -151,16 +151,17 @@ public class SimpleGSTParserTest {
                 .exclusionChar('!')
                 .escapingCharacter('+').build())
             .escapingMode(EscapingMode.UNESCAPED_IS_PLACEHOLDER).build();
+        
         assertEquals(expected, parser.parse("foo[bar_fizz+]]baz"));
     }
-
+    
     @Test
     public void unescapedWhenRequired() {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo{bar}baz"));
-
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-
+        
         assertEquals(expected, parser.parse("foo{bar}baz"));
     }
     
@@ -170,14 +171,14 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("fizz%"), new Text(3, "%bar_fizz+%%")), false, true));
         expected.add(new Text(15, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.builder()
             .specialCharacterSet(SpecialCharacterSet.builder()
                 .closure('%', '%')
                 .argumentDelimiter('_')
                 .escapingCharacter('+').build())
             .escapingMode(EscapingMode.UNESCAPED_IS_PLACEHOLDER).build();
-    
+        
         assertEquals(expected, parser.parse("foo%bar_fizz+%%baz"));
     }
     
@@ -187,9 +188,9 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("ba}r", Optional.empty(), new Text(3, "\\{ba\\}r}")), false, true));
         expected.add(new Text(11, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{ba\\}r}baz"));
     }
     
@@ -199,9 +200,9 @@ public class SimpleGSTParserTest {
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar\\", Optional.empty(), new Text(3, "\\{bar\\\\}")), false, true));
         expected.add(new Text(11, "baz"));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{bar\\\\}baz"));
     }
     
@@ -210,9 +211,9 @@ public class SimpleGSTParserTest {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar\\}baz", Optional.empty(), new Text(3, "\\{bar\\\\\\}baz")), false, false));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{bar\\\\\\}baz"));
     }
     
@@ -223,9 +224,9 @@ public class SimpleGSTParserTest {
         LinkedObjects<GSTPart> expected = new LinkedObjects<>();
         expected.add(new Text(0, "foo"));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("arg"), new Text(3, "\\{!bar:arg}")), true, true));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("foo\\{!bar:arg}"));
     }
     
@@ -252,9 +253,9 @@ public class SimpleGSTParserTest {
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("arg"), new Text(170, "\\{bar:arg}")), false, true));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("arg"), new Text(180, "\\{bar:arg}")), false, true));
         expected.add(new Placeholder(new DirectPlaceholderData("bar", Optional.of("arg"), new Text(190, "\\{bar:arg}")), false, true));
-    
+        
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}\\{bar:arg}"));
     }
     
@@ -283,7 +284,7 @@ public class SimpleGSTParserTest {
         expected.add(new Placeholder(new DirectPlaceholderData("bar20", Optional.of("arg"), new Text(220, "\\{bar20:arg")), false, false));
         
         SimpleGSTParser parser = SimpleGSTParser.inst();
-    
+        
         assertEquals(expected, parser.parse("\\{bar1:arg}\\{bar2:arg}\\{bar3:arg}\\{bar4:arg}\\{!bar5:arg}\\{bar6:arg}\\{bar7:arg}\\{bar8:arg}\\{bar9:arg}\\{bar10:arg}\\{bar11:arg}\\{bar12:arg}\\{bar13:arg}\\{bar14:arg}\\{bar15:arg}\\{bar16:arg}\\{bar17:arg}\\{bar18:arg}\\{bar19:arg}\\{bar20:arg"));
     }
     

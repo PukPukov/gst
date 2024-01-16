@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 30000, timeUnit = TimeUnit.MILLISECONDS)
 @Fork(5)
 public class GSTBenchmark {
-
+    
     private static final Placeholder DUMMY_PLACEHOLDER = Placeholder.DUMMY;
     
     private final int BASE_LENGTH = 700;
@@ -192,7 +192,7 @@ public class GSTBenchmark {
         var buffer = ConfGSTTerminator.newStrict().build();
         var samples = this.placeholders100Samples;
         var sample = samples.get(this.random.nextInt(samples.size()));
-    
+        
         for (String placeholderKey : sample.value()) {
             buffer.declare(placeholderKey, (ph) -> this.randomSampledValueString());
             //noinspection DataFlowIssue
@@ -210,7 +210,7 @@ public class GSTBenchmark {
         var buffer = ConfGSTTerminator.newStrict().build();
         var samples = this.placeholders10Samples;
         var sample = samples.get(this.random.nextInt(samples.size()));
-
+        
         for (String placeholderKey : sample.value()) {
             buffer.declare(placeholderKey, (ph) -> this.randomSampledValueString());
             //noinspection DataFlowIssue
@@ -247,7 +247,7 @@ public class GSTBenchmark {
         for (String placeholderKey : sample.value()) {
             buffer.declare(placeholderKey, ignored -> "yoba");
         }
-    
+        
         LinkedObjects<GSTPart> parsedGST = this.parser.parse(sample.key());
         return buffer.terminate(parsedGST);
     }
