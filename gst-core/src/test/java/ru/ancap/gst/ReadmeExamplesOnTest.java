@@ -11,11 +11,11 @@ import ru.ancap.gst.parser.simple.SimpleGSTParser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReadmeExamplesOnTest {
-
+    
     @Test
     public void exampleTestSimple() {
         GSTParser parser = SimpleGSTParser.inst();
-
+        
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("foo", "fizz");
         buffer.declare("bar", "buzz");
@@ -24,7 +24,7 @@ public class ReadmeExamplesOnTest {
         
         assertEquals("foo = fizz; bar = buzz", result);
     }
-
+    
     @Test
     public void exampleTestFineTuned() {
         GSTParser parser = SimpleGSTParser.builder()
@@ -32,16 +32,16 @@ public class ReadmeExamplesOnTest {
                 .closure('(', ')')
                 .argumentDelimiter('_').build())
             .escapingMode(EscapingMode.UNESCAPED_IS_PLACEHOLDER).build();
-
+        
         var buffer = ConfGSTTerminator.newLenient().build(); // fail-safe
-
+        
         buffer.declare("isPrime", (placeholder) -> ""+ Primes.isPrime(Integer.parseInt(placeholder.argument().orElseThrow())));
-
+        
         String result1 = buffer.terminate(parser.parse("(isPrime_14); (isPrime_7)"   ));   // output is "false; true"
         String result2 = buffer.terminate(parser.parse("\\(isPrime_14); (isPrime_7)" ));   // output is "(isPrime_14); true"
         String result3 = buffer.terminate(parser.parse("(isPrime_foo); (isPrime_7)"  ));   // output is "(isPrime_foo); true"
         String result4 = buffer.terminate(parser.parse("(isPrime_foo); (isPrime_7"   ));   // output is "(isPrime_foo); true"
-
+        
         assertEquals("false; true", result1);
         assertEquals("(isPrime_14); true", result2);
         assertEquals("(isPrime_foo); true", result3);

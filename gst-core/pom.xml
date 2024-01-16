@@ -9,7 +9,7 @@
         <artifactId>GST</artifactId>
         <version>1.0</version>
     </parent>
-
+    
     <groupId>ru.ancap</groupId>
     <artifactId>gst-core</artifactId>
     <version>1.0</version>
@@ -17,5 +17,5 @@
     <build>
         <finalName>gst-v${version}</finalName>
     </build>
-
+    
 </project>
