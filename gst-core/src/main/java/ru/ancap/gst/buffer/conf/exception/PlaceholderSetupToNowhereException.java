@@ -10,10 +10,10 @@ import ru.ancap.gst.buffer.PlaceholderHandler;
 @Accessors(fluent = true) @Getter
 @ToString
 public class PlaceholderSetupToNowhereException extends RuntimeException {
-
+    
     private final String key;
     private final PlaceholderHandler handler;
-
+    
     @Override
     public String getMessage() {
         return this.toString();

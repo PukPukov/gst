@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @ToString @EqualsAndHashCode
 public class SimpleGSTParser implements GSTParser {
-
+    
     private final SpecialCharacterSet specialCharacterSet;
     private final EscapingMode escapingMode;
     private final FastCharIndex specialCharactersIndex;
@@ -34,7 +34,7 @@ public class SimpleGSTParser implements GSTParser {
     
     @Accessors(fluent = true, chain = true) @Setter
     public static class Builder {
-
+        
         private SpecialCharacterSet specialCharacterSet = SpecialCharacterSet.DEFAULT;
         private EscapingMode escapingMode = EscapingMode.UNESCAPED_IS_SIMPLE_TEXT;
         
@@ -56,7 +56,7 @@ public class SimpleGSTParser implements GSTParser {
     public static SimpleGSTParser inst() {
         return SimpleGSTParser.builder().build();
     }
-
+    
     @Override
     public LinkedObjects<GSTPart> parse(String template) {
         char[] string = template.toCharArray();
@@ -66,7 +66,7 @@ public class SimpleGSTParser implements GSTParser {
         ParseState state = new ParseState();
         
         int partStartIndex = 0;
-
+        
         for (int index = 0; index < string.length; index++) {
             escapingBuffer.step();
             char char_ = string[index];
@@ -77,7 +77,7 @@ public class SimpleGSTParser implements GSTParser {
             }
             boolean isSpecial = this.specialCharactersIndex.contains(char_);
             if (escapingBuffer.currentlyEscaped() && !isSpecial) throw new RegularCharacterEscapedException(template, index, char_);
-
+            
             switch (state.filling) {
                 case FILLING_TEXT -> {
                     boolean shouldEscapePh = this.escapingMode == EscapingMode.UNESCAPED_IS_SIMPLE_TEXT;
@@ -137,7 +137,7 @@ public class SimpleGSTParser implements GSTParser {
         }
         return state.parsedGST;
     }
-
+    
     private void closePlaceholder(ParseState state, int index, boolean endExpected) {
         state.parsedGST.add(new Placeholder(
             new DirectPlaceholderData(
@@ -155,15 +155,15 @@ public class SimpleGSTParser implements GSTParser {
         ));
         state.nextPart(FillState.FILLING_TEXT);
     }
-
+    
     private enum FillState {
-
+        
         FILLING_TEXT,
         FILLING_ID,
         FILLING_ARGUMENT
-
+        
     }
-
+    
     private static class ParseState {
         
         public LinkedObjects<GSTPart> parsedGST;

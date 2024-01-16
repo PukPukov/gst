@@ -11,7 +11,7 @@ public interface OptionalHandler<T> {
             public boolean checkForProblem() {
                 return true;
             }
-
+            
             @Override
             public T handler() {
                 return handler;

@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import ru.ancap.gst.parser.simple.exception.IllegalGSTException;
 
 @Accessors(fluent = true) @Getter
 @EqualsAndHashCode(callSuper = true) @ToString(callSuper = true)
@@ -18,7 +17,7 @@ public class UnexpectedSpecialCharacterException extends IllegalGSTException {
         this.index = index;
         this.illegalSpecialCharacter = character;
     }
-
+    
     @Override
     public String getMessage() {
         return this.toString();

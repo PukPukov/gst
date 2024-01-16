@@ -28,7 +28,7 @@ public class ConfGSTTerminatorTest {
         
         assertEquals("foobuzzbaz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
     }
-
+    
     @Test
     public void findDeclaration() {
         var buffer = ConfGSTTerminator.newStrict().build();
@@ -37,20 +37,20 @@ public class ConfGSTTerminatorTest {
         assertEquals("buzz", buffer.findDeclaration("bar").handle(Placeholder.DUMMY));
         assertNull(buffer.findDeclaration("baz"));
     }
-
+    
     @Test
     public void argument() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", ph -> ph.argument().orElseThrow());
-
+        
         assertEquals("foobuzzbaz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar:buzz}baz")));
     }
-
+    
     @Test
     public void originalPart() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", ph -> ph.originalPart().index() + ph.originalPart().string());
-
+        
         assertEquals("foo3\\{bar}baz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
     }
     
@@ -61,7 +61,7 @@ public class ConfGSTTerminatorTest {
         buffer.declare("bar2", "buzz2");
         buffer.declare("bar3", "buzz3");
         buffer.declare("bar4", "buzz4");
-
+        
         assertEquals("foobuzzbazbuzz2buzz3buzz4", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz\\{bar2}\\{bar3}\\{bar4}")));
     }
     
@@ -69,7 +69,7 @@ public class ConfGSTTerminatorTest {
     public void useMultipleTimes() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", "buzz");
-
+        
         assertEquals("foobuzzbazbuzzbuzzbuzz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz\\{bar}\\{bar}\\{bar}")));
     }
     
@@ -82,7 +82,7 @@ public class ConfGSTTerminatorTest {
     public void unhandledPlaceholderLenient() {
         assertEquals("foo\\{bar}baz\\{bar2}\\{bar3}\\{bar4}", ConfGSTTerminator.newLenient().build().terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz\\{bar2}\\{bar3}\\{bar4}")));
     }
-
+    
     @Test
     public void unhandledPlaceholderWarning() {
         var loggerMock = mock(Logger.class);
@@ -94,41 +94,41 @@ public class ConfGSTTerminatorTest {
     public void placeholderSetupToNowhere() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", "buzz");
-
+        
         assertThrows(PlaceholderSetupToNowhereException.class, () -> buffer.terminate(SimpleGSTParser.inst().parse("foobaz")));
     }
-
+    
     @Test
     public void placeholderSetupToNowhereLenient() {
         var buffer = ConfGSTTerminator.newLenient().build();
         buffer.declare("bar", "buzz");
-
+        
         assertEquals("foobaz", buffer.terminate(SimpleGSTParser.inst().parse("foobaz")));
     }
-
+    
     @Test
     public void placeholderSetupToNowhereWarning() {
         var loggerMock = mock(Logger.class);
         var buffer = ConfGSTTerminator.newWarning(loggerMock).build();
         buffer.declare("bar", "buzz");
-
+        
         assertEquals("foobaz", buffer.terminate(SimpleGSTParser.inst().parse("foobaz")));
         verify(loggerMock).throwing(any(String.class), any(String.class), any(PlaceholderSetupToNowhereException.class));
     }
-
+    
     @Test
     public void placeholderSetupToExclusion() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", "buzz");
-
+        
         assertEquals("foobaz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{!bar}baz")));
     }
-
+    
     @Test
     public void externalExcludedKeys() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", "buzz");
-
+        
         assertEquals("foobaz", buffer.terminate(SimpleGSTParser.inst().parse("foobaz"), Set.of("bar")));
     }
     
@@ -138,7 +138,7 @@ public class ConfGSTTerminatorTest {
         buffer.declare("bar", "buzz");
         assertThrows(PlaceholderOverrideException.class, () -> buffer.declare("bar", "buzz2"));
     }
-
+    
     @Test
     public void placeholderOverrideLenient() {
         var buffer = ConfGSTTerminator.newLenient().build();
@@ -154,7 +154,7 @@ public class ConfGSTTerminatorTest {
         var buffer = ConfGSTTerminator.newWarning(loggerMock).build();
         buffer.declare("bar", "buzz");
         buffer.declare("bar", "buzz2");
-
+        
         verify(loggerMock).throwing(any(String.class), any(String.class), any(PlaceholderOverrideException.class));
         assertEquals("foobuzz2baz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
     }
@@ -163,36 +163,36 @@ public class ConfGSTTerminatorTest {
     public void placeholderProcessingException() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", ph -> ph.argument().orElseThrow()); // should throw since no argument
-
+        
         assertThrows(PlaceholderProcessingException.class, () -> buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
     }
-
+    
     @Test
     public void placeholderProcessingExceptionLenient() {
         var buffer = ConfGSTTerminator.newLenient().build();
         buffer.declare("bar", ph -> ph.argument().orElseThrow()); // should throw since no argument
-
+        
         assertEquals("foo\\{bar}baz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
     }
-
+    
     @Test
     public void placeholderProcessingExceptionWarning() {
         var loggerMock = Mockito.mock(Logger.class);
         var buffer = ConfGSTTerminator.newWarning(loggerMock).build();
         buffer.declare("bar", ph -> ph.argument().orElseThrow()); // should throw since no argument
-
+        
         assertEquals("foo\\{bar}baz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
         verify(loggerMock).throwing(any(String.class), any(String.class), any(PlaceholderProcessingException.class));
     }
-
+    
     @Test
     public void unexpectedEndOfInput() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", "buzz");
-
+        
         assertThrows(UnexpectedEndOfInputException.class, () -> buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar:arg")));
     }
-
+    
     @Test
     public void unexpectedEndOfInputLenient() {
         var buffer = ConfGSTTerminator.newLenient().build();
@@ -200,7 +200,7 @@ public class ConfGSTTerminatorTest {
             assertEquals("arg", ph.argument().orElseThrow()); // don't need to assert called since comparing returned result at next line with expected
             return "buzz";
         });
-
+        
         assertEquals("foobuzz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar:arg")));
     }
     
@@ -212,7 +212,7 @@ public class ConfGSTTerminatorTest {
             assertEquals("arg", ph.argument().orElseThrow()); // don't need to assert called since comparing returned result at next line with expected
             return "buzz";
         });
-
+        
         assertEquals("foobuzz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar:arg")));
         verify(loggerMock).throwing(any(String.class), any(String.class), any(UnexpectedEndOfInputException.class));
     }
@@ -227,22 +227,22 @@ public class ConfGSTTerminatorTest {
 
         assertEquals("foobuzzbaz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz"), Set.of("bar2", "bar3", "bar4")));
     }
-
+    
     @Test
     public void dontAcceptOverridesButNotThrow() {
         var buffer = ConfGSTTerminator.newLenient()
             .placeholderOverrideHandler(OptionalHandler.checking((ign1, ign2, ign3) -> false)).build();
         buffer.declare("bar", "buzz");
         buffer.declare("bar", "buzz2");
-
+        
         assertEquals("foobuzzbaz", buffer.terminate(SimpleGSTParser.inst().parse("foo\\{bar}baz")));
     }
-
+    
     @Test
     public void empty() {
         var buffer = ConfGSTTerminator.newStrict().build();
         buffer.declare("bar", "buzz");
-
+        
         assertEquals("", buffer.terminate(SimpleGSTParser.inst().parse(""), Set.of("bar")));
     }
     

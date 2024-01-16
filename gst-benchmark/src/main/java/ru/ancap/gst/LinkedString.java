@@ -28,7 +28,7 @@ public class LinkedString {
             length+=this_.content.length();
             next0 = this_.next;
         }
-
+        
         StringBuilder stringBuilder = new StringBuilder(length);
         LinkedString.Node next1 = this.base;
         while (next1 != null) {
@@ -46,7 +46,7 @@ public class LinkedString {
         public CharSequence content;
         public @Nullable Node previous;
         public @Nullable Node next;
-
+        
         public @Nullable Node next(int i) {
             @Nullable Node this_ = this;
             for (int j = 0; j <= i; j++) {

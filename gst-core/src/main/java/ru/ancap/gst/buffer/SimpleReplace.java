@@ -11,7 +11,7 @@ import ru.ancap.gst.parser.gst_structure.DirectPlaceholderData;
 public class SimpleReplace implements ConfExpectPlaceholderHandler {
     
     private final String replacement;
-
+    
     @Override
     public String handle(DirectPlaceholderData ignored) {
         return this.replacement;

@@ -13,7 +13,7 @@ public class LinkedObjects<T> implements Iterable<Node<T>> {
     
                                private @Nullable Node<T> graphStart;
     @EqualsAndHashCode.Exclude private @Nullable Node<T> graphEnd;
-
+    
     public void add(T t) {
         Node<T> node = new Node<>(t, this);
         //noinspection IfStatementWithIdenticalBranches because resolution too cognitivly complex
@@ -30,25 +30,26 @@ public class LinkedObjects<T> implements Iterable<Node<T>> {
         for (var node : this) copy.add(node.contents());
         return copy;
     }
-
+    
     @Override
     public @NotNull Iterator<Node<T>> iterator() {
         Node<T> start = this.graphStart();
         return new Iterator<>() {
-
+            
             private Node<T> next = start;
-
+            
             @Override
             public boolean hasNext() {
                 return this.next != null;
             }
-
+            
             @Override
             public Node<T> next() {
                 Node<T> returned = this.next;
                 this.next = this.next.next();
                 return returned;
             }
+            
         };
     }
     
