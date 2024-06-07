@@ -38,11 +38,6 @@ public class SimpleGSTParser implements GSTParser {
         private SpecialCharacterSet specialCharacterSet = SpecialCharacterSet.DEFAULT;
         private EscapingMode escapingMode = EscapingMode.UNESCAPED_IS_SIMPLE_TEXT;
         
-        public Builder specialCharacterSet(SpecialCharacterSet specialCharacterSet) {
-            this.specialCharacterSet = specialCharacterSet;
-            return this;
-        }
-        
         public SimpleGSTParser build() {
             return new SimpleGSTParser(
                 this.specialCharacterSet,
