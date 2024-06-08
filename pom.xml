@@ -18,7 +18,7 @@
         <java.version>21</java.version>
         <encoding>UTF-8</encoding>
         
-        <gst-core.version>1.0.1</gst-core.version>
+        <gst-core.version>1.0.2</gst-core.version>
         <gst-benchmark.version>1.0</gst-benchmark.version>
     </properties>
     
