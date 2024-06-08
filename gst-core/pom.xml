@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>org.example</groupId>
+        <groupId>ru.ancap</groupId>
         <artifactId>GST</artifactId>
         <version>1.0</version>
     </parent>
     
-    <groupId>ru.ancap</groupId>
     <artifactId>gst-core</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     
     <build>
         <finalName>gst-v${version}</finalName>
