@@ -15,7 +15,7 @@ public class LinkedObjects<T> implements Iterable<Node<T>> {
     @EqualsAndHashCode.Exclude private @Nullable Node<T> graphEnd;
     
     public void add(T t) {
-        Node<T> node = new Node<>(t, this);
+        Node<T> node = new Node<>(this, t);
         //noinspection IfStatementWithIdenticalBranches because resolution too cognitivly complex
         if (this.graphStart == null) { this.graphStart = node;
                                        this.graphEnd   = node;   }
