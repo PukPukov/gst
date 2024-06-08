@@ -11,7 +11,7 @@
     </parent>
     
     <artifactId>gst-core</artifactId>
-    <version>1.0.1</version>
+    <version>${gst-core.version}</version>
     
     <build>
         <finalName>gst-v${version}</finalName>
