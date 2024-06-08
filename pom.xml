@@ -6,7 +6,7 @@
     
     <groupId>org.example</groupId>
     <artifactId>GST</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     
     <modules>
