@@ -54,3 +54,16 @@ GSTBenchmark.simple_small                               avgt   25    5063,460 ? 
 
 ### Maven
 
+```xml
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <dependency>
+            <groupId>com.github.PukPukov.gst</groupId>
+            <artifactId>gst-core</artifactId>
+            <version>look above</version>
+            <scope>compile</scope>
+        </dependency>
+```
