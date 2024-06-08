@@ -10,7 +10,7 @@
     </parent>
     
     <artifactId>gst-benchmark</artifactId>
-    <version>1.0</version>
+    <version>${gst-benchmark.version}</version>
     
     <build>
         <plugins>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>ru.ancap</groupId>
             <artifactId>gst-core</artifactId>
-            <version>1.0</version>
+            <version>${gst-core.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
