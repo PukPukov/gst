@@ -28,7 +28,7 @@ public class ConfGSTTerminator {
     
     private final Map<String, PlaceholderHandler> declarations = new HashMap<>();
     
-    @lombok.Builder.Default private final InsertionSafer insertionSafer = InsertionSafer.UNSAFE;
+    @lombok.Builder.Default private final InsertionHandler insertionHandler = InsertionSafer.UNSAFE;
     @lombok.Builder.Default private final PhProcessingErrorHandler phProcessingErrorHandler = (ign, err) -> {
         throw new PlaceholderProcessingException(err);
     };
@@ -44,6 +44,15 @@ public class ConfGSTTerminator {
     @lombok.Builder.Default private final OptionalHandler<UnexpectedEndOfInputHandler> unexpectedEndOfInputHandler = OptionalHandler.checking(
         gst -> { throw new UnexpectedEndOfInputException(gst);}
     );
+    
+    public static class Builder {
+        
+        public Builder insertionSafer(InsertionSafer safer) {
+            this.insertionHandler(safer);
+            return this;
+        }
+        
+    }
     
     /**
      * Generally discouraged to use because of hard bug fixing in case of errors in GST with this terminator.
@@ -101,7 +110,7 @@ public class ConfGSTTerminator {
     }
     
     public void declare(String key, ConfExpectPlaceholderHandler handler) {
-        this.declareRaw(key, new CallConfer(this.insertionSafer, this.phProcessingErrorHandler, handler));
+        this.declareRaw(key, new CallConfer(this.insertionHandler, this.phProcessingErrorHandler, handler));
     }
     
     public @Nullable PlaceholderHandler findDeclaration(String placeholderKey) {
@@ -111,14 +120,14 @@ public class ConfGSTTerminator {
     @RequiredArgsConstructor
     public static class CallConfer implements PlaceholderHandler {
         
-        private final InsertionSafer insertionSafer;
+        private final InsertionHandler insertionHandler;
         private final PhProcessingErrorHandler phProcessingErrorHandler;
         
         private final ConfExpectPlaceholderHandler shrinkedCallTarget;
         
         @Override
         public String handle(Placeholder placeholder) {
-            try                         { return this.insertionSafer.safe(this.shrinkedCallTarget.handle(placeholder.directData())); }
+            try                         { return this.insertionHandler.handle(this.shrinkedCallTarget.handle(placeholder.directData())); }
             catch (Throwable throwable) { return this.phProcessingErrorHandler.handle(placeholder.directData(), throwable);          }
         }
         
