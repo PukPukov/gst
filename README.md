@@ -1,4 +1,4 @@
-Universal yet blazing-fast way to handle placeholders in strings in Java.
+Universal and efficient way to handle placeholders in strings in Java.
 
 ### It can be simple...
 
